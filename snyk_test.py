@@ -4,6 +4,7 @@ import sqlite3
 import requests
 import time
 from flask import Flask, request
+import subprocess  # Importing subprocess for command execution
 
 app = Flask(__name__)
 
@@ -37,6 +38,13 @@ def deserialize():
     data = request.files['file'].read()
     obj = pickle.loads(data)  # No validation! Allows execution of malicious payloads
     return str(obj)
+
+# 5. **Command Injection**
+@app.route('/run-command', methods=['POST'])
+def run_command():
+    cmd = request.form.get("cmd")
+    output = subprocess.check_output(cmd, shell=True)  # Vulnerable! Allows command injection
+    return output.decode()
 
 if __name__ == '__main__':
     app.run(debug=True)
