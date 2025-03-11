@@ -17,12 +17,6 @@ def get_user(username):
     conn.close()
     return result
 
-# 2. **Path Traversal**
-@app.route('/read', methods=['GET'])
-def read_file():
-    filename = request.args.get("file")
-    with open(f"/var/www/{filename}", "r") as f:  # Still vulnerable to Path Traversal
-        return f.read()
 
 # 3. **Race Condition (TOCTOU) - New Vulnerability**
 @app.route('/race-condition', methods=['POST'])
