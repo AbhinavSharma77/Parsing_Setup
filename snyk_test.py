@@ -18,7 +18,7 @@ def get_user(username):
     return result
 
 
-# 3. **Race Condition (TOCTOU) - New Vulnerability**
+# 2. **Race Condition (TOCTOU) - New Vulnerability**
 @app.route('/race-condition', methods=['POST'])
 def race_condition():
     filename = request.form.get("file")
@@ -29,7 +29,7 @@ def race_condition():
         with open(filename, "r") as f:
             return f.read()  # TOCTOU - File can be modified before access
 
-# 4. **Server-Side Request Forgery (SSRF) - New Vulnerability**
+# 3. **Server-Side Request Forgery (SSRF) - New Vulnerability**
 @app.route('/fetch-url', methods=['POST'])
 def fetch_url():
     url = request.form.get("url")
