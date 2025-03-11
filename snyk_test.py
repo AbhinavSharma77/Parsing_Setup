@@ -17,20 +17,14 @@ def get_user(username):
     conn.close()
     return result
 
-# 2. **Insecure Deserialization**
-@app.route('/unpickle', methods=['POST'])
-def unpickle_data():
-    data = request.form.get("data")
-    return pickle.loads(bytes.fromhex(data))  # Still vulnerable to Insecure Deserialization
-
-# 3. **Path Traversal**
+# 2. **Path Traversal**
 @app.route('/read', methods=['GET'])
 def read_file():
     filename = request.args.get("file")
     with open(f"/var/www/{filename}", "r") as f:  # Still vulnerable to Path Traversal
         return f.read()
 
-# 4. **Race Condition (TOCTOU) - New Vulnerability**
+# 3. **Race Condition (TOCTOU) - New Vulnerability**
 @app.route('/race-condition', methods=['POST'])
 def race_condition():
     filename = request.form.get("file")
@@ -41,7 +35,7 @@ def race_condition():
         with open(filename, "r") as f:
             return f.read()  # TOCTOU - File can be modified before access
 
-# 5. **Server-Side Request Forgery (SSRF) - New Vulnerability**
+# 4. **Server-Side Request Forgery (SSRF) - New Vulnerability**
 @app.route('/fetch-url', methods=['POST'])
 def fetch_url():
     url = request.form.get("url")
